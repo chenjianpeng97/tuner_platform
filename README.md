@@ -34,7 +34,7 @@ Cucumber Studio
         - 支持behave格式导出feature-scenario的文件目录
 # 技术栈
 - 前端:vue3
-- 后端:python-django-restframework
+- 后端:python-fastapi
 - 数据库:可配置sqlite或postgre
 # 测试套件
 - 单元测试:pytest
@@ -42,13 +42,23 @@ Cucumber Studio
 - UI测试:playwright
 # 开发环境
 - 前端:vue3-latest
-- 后端:django-latest django-restframework bdd框架behave-django
+- 后端:fastapi-latest
 - 数据库:sqlite3
 # API风格
 - RESTful
+# 目录说明
+- backend存放后端代码
+- frontend存放前端代码
+- tests存放测试代码
+  - unit存放单元测试代码
+    - 以pytest驱动运行,测试函数逻辑
+  - integration存放集成测试代码
+    - 以behave驱动运行,测试后端API接口集成业务
+  - acceptance存放BDD测试代码
+    - 以behave驱动运行,完成端到端测试
 # BUILD顺序
 - 输出有层次的feature描述
-- DDD设计划分分析
+- DDD设计划分分析,根据DDD模式构建后端代码
 - 设计API文档
 - 结合Feature文件以BDD的方式完成后端核心功能构建,用behave为框架,在steps/model 下完成implementation,behave --stage=model features/以全部通过这些测试
 - 功能函数增加单元测试套件,以TDD方式编写,以pytest驱动运行
