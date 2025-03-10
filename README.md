@@ -59,6 +59,13 @@ Cucumber Studio
 # BUILD顺序
 - 输出有层次的feature描述
 - DDD设计划分分析,根据DDD模式构建后端代码
+  - 用pydantic建立domain models
+  - 建立repository 接口
+  - 创建database schema
+  - 实现repository
+  - 实现application service
+  - 集成fastapi 实现接口controller
+  - 实现interface层依赖注入
 - 设计API文档
 - 结合Feature文件以BDD的方式完成后端核心功能构建,用behave为框架,在steps/model 下完成implementation,behave --stage=model features/以全部通过这些测试
 - 功能函数增加单元测试套件,以TDD方式编写,以pytest驱动运行

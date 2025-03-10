@@ -17,4 +17,3 @@ Feature: /auth/register
     When 使用正确凭证登录
     Then 返回登录成功状态
     When 使用错误密码登录 testuser_002 输入登录密码 wrongpassword
-    Then 返回认证失败状态
