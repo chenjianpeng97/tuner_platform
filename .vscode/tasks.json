@@ -1,0 +1,19 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Behave Model Stage Tests",
+            "type": "shell",
+            "command": "$env:PYTHONPATH = 'D:\\dev\\project\\tuner_platform\\backend;' + $env:PYTHONPATH; behave --stage=model D:\\dev\\project\\tuner_platform\\tests\\acceptance",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
