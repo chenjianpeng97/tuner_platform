@@ -1,13 +1,15 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# interface/dependencies.py
 
-"""
-@author: Tuner
-@contact:chenjianpeng97@outlook.com
-@version: 1.0.0
-@license: Apache Licence
-@file: dependencies.py.py
-@time: 2025/3/14 17:47
-"""
-if __name__ == '__main__': 
-    pass
+from fastapi import Depends
+from application.services.project import ProjectService
+from infrastructure.repositories.project import SqliteProjectRepository
+
+db_path = './db.sqlite3'
+
+
+async def get_project_service(
+        db_path: str = Depends(lambda: db_path)
+) -> ProjectService:
+    return ProjectService(
+        order_repository=SqliteProjectRepository(db_path=db_path),
+    )

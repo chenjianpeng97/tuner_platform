@@ -1,13 +1,13 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+from abc import ABC, abstractmethod
+from typing import Optional
+from domain.models.project.entity import Project
 
-"""
-@author: Tuner
-@contact:chenjianpeng97@outlook.com
-@version: 1.0.0
-@license: Apache Licence
-@file: project.py
-@time: 2025/3/14 15:59
-"""
-if __name__ == '__main__': 
-    pass
+
+class ProjectRepository(ABC):
+    @abstractmethod
+    def save(self, project: Project) -> Optional[None]:
+        pass
+
+    @abstractmethod
+    def get_project_by_id(self, user_id: int) -> Optional[Project]:
+        pass
