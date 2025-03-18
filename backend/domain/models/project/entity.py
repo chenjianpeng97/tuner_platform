@@ -14,7 +14,6 @@ class Project(BaseModel):
     id: int | None = None
     project_name: str = Field(..., description="项目名称")
     description: str | None = Field(None, description="项目描述")
-    creator_id: int = Field(..., description="创建人ID")
 
     test_runs: list[TestRun] | None = Field(None, description="项目下的测试情况")
 
@@ -36,3 +35,7 @@ class Project(BaseModel):
         if len(self.project_name) > 100:
             raise ProjectNameError("项目名称过长")
         return self
+
+    class Config:
+        """pydantic config"""
+        orm_mode = True

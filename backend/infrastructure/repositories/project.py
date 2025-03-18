@@ -1,68 +1,50 @@
-# infrastructure/repositories/project.py
-
-import logging
 from typing import Optional
+from abc import ABC, abstractmethod
 
-import aiosqlite
-from aiosqlite.core import Error as SqliteError
+from sqlalchemy.orm import Session
+
 from domain.models.project.entity import Project
+from infrastructure.database.models import ProjectDB
 from domain.repositories.project import ProjectRepository
-from domain.exceptions import ProjectCreationError
-
-logger = logging.getLogger(__name__)
 
 
-class SqliteProjectRepository(ProjectRepository):
-    def __init__(self, db_path: str):
-        self._db_path = db_path
+class SQLAlchemyProjectRepository(ProjectRepository):
+    def __init__(self, db: Session):
+        self.db = db
 
-    async def save(self, project: Project) -> None:
-        async with aiosqlite.connect(self._db_path) as conn:
-            await conn.execute("BEGIN")
-            try:
-                cursor = await conn.execute('''
-                    INSERT INTO project (
-                        project_name, description, creator_id, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?)
-                ''', (
-                    project.project_name,
-                    project.description,
-                    project.user_id,
-                    project.created_at,
-                    project.updated_at
-                ))
-                project.id = cursor.lastrowid
-                await conn.commit()
-            except SqliteError as e:
-                await conn.rollback()
-                logger.exception("Project Saving failed")
-                raise ProjectCreationError("Failed to create project")
-            except Exception as e:
-                await conn.rollback()
-                logger.exception("Unexpected error while creating project")
-                raise ProjectCreationError("Failed to create project")
+    def save(self, project: Project) -> Optional[Project]:
+        """
+        保存 Project 对象到数据库
+        """
+        project_db = self.db.query(ProjectDB).filter(ProjectDB.id == project.id).first()
 
-    async def get_project_by_id(self, project_id: int) -> Optional[Project]:
-        async with aiosqlite.connect(self._db_path) as conn:
-            try:
-                cursor = await conn.execute('''
-                    SELECT id, name, description, created_at, updated_at 
-                    FROM projects 
-                    WHERE id = ?
-                ''', (project_id))
-                row = await cursor.fetchone()
+        if project_db:
+            # 更新已存在的 Project
+            for key, value in project.dict(exclude={"id"}).items():
+                setattr(project_db, key, value)
+        else:
+            # 创建新的 Project
+            project_db = ProjectDB(**project.dict(exclude_unset=True))
+            self.db.add(project_db)
 
-                if row is None:
-                    return None
+        self.db.commit()
+        self.db.refresh(project_db)
+        return Project.from_orm(project_db)  # 从数据库模型创建 Pydantic 模型
 
-                return Project(
-                    id=row[0],
-                    name=row[1],
-                    description=row[2],
-                    created_at=row[3],
-                    updated_at=row[4],
-                    user_id=user_id
-                )
-            except SqliteError as e:
-                logger.exception("Failed to fetch project")
-                return None
+    def get_project_by_id(self, project_id: int) -> Optional[Project]:
+        """
+        根据 ID 获取 Project 对象
+        """
+        project_db = self.db.query(ProjectDB).filter(ProjectDB.id == project_id).first()
+        if project_db:
+            return Project.from_orm(project_db)  # 从数据库模型创建 Pydantic 模型
+        return None
+
+    def get_project_by_name(self, project_name: str) -> Optional[Project]:
+        """
+        根据项目名称获取项目
+        """
+        project_db = self.db.query(ProjectDB).filter(ProjectDB.project_name == project_name).first()
+        if project_db:
+            return Project.from_orm(project_db)
+        return None
