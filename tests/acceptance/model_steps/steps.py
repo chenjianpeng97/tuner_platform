@@ -5,7 +5,7 @@ from domain.models.user.entity import User
 
 @given("I login with PM account '{username}'")
 def step_given_log_in_with_pm_account(context, username):
-    context.user = User(user_name=username, id=1)
+    context.user = User(id=1, user_name=username)
 
 
 @when("I create a project with name '{project_name}'")
@@ -18,7 +18,7 @@ def step_then_see_project_info(context):
     for row in context.table:
         assert context.project.project_name == row["project_name"]
         if row["last_test_runs"] == "No test runs":
-            assert context.project.test_runs is None
+            assert context.project.get_last_test_run_status() is None
         else:
-            assert context.project_service.get_last_test_run(context.project).test_run_status == row["last_test_runs"]
+            assert context.project.get_last_test_run_status() == row["last_test_runs"]
         assert context.user.user_name, context.project.creator_id == (row["PM"], context.user.id)

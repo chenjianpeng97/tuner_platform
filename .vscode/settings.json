@@ -1,10 +1,6 @@
 {
-    "cucumberautocomplete.steps": [
-        "tests/acceptance/steps/**/*.py"
-    ],
-    "cucumberautocomplete.syncfeatures": "tests/acceptance/features/**/*.feature",
-    "python.envFile": "${workspaceFolder}/.env",
-    "python.analysis.extraPaths": [
-        "${workspaceFolder}/backend"
-    ]
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "files.associations": {
+        "*.feature": "feature"
+    },
 }

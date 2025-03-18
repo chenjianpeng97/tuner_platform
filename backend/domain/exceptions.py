@@ -5,7 +5,8 @@ class DomainError(Exception):
 class ProjectError(DomainError):
     """Base exception for project-related errors"""
 
-
+class ProjectNameError(DomainError):
+    """Raised when a project name is invalid"""
 class ProjectNotFoundError(ProjectError):
     """Raised when a project is not found"""
 

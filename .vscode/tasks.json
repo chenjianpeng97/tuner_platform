@@ -4,7 +4,7 @@
         {
             "label": "Run Behave Model Stage Tests",
             "type": "shell",
-            "command": "$env:PYTHONPATH = 'D:\\dev\\project\\tuner_platform\\backend;' + $env:PYTHONPATH; behave --stage=model D:\\dev\\project\\tuner_platform\\tests\\acceptance",
+            "command": "$env:PYTHONPATH = 'D:\\dev\\project\\tuner_platform\\backend;' + $env:PYTHONPATH; behave --stage=model --tags='not @todo' D:\\dev\\project\\tuner_platform\\tests\\acceptance",
             "group": {
                 "kind": "test",
                 "isDefault": true

@@ -1,8 +1,11 @@
-CREATE TABLE IF NOT EXISTS project (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS project
+(
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
     project_name VARCHAR(100) NOT NULL,
-    description TEXT,
-    creator_id INTEGER NOT NULL,
-    CONSTRAINT project_name_length CHECK (length(project_name) <= 100)
+    description  TEXT,
+    create_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    create_by    VARCHAR(50),
+    update_by    VARCHAR(50)
 );
 
